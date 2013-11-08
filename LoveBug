@@ -1,0 +1,131 @@
+/* 
+ * AP(r) Computer Science GridWorld Case Study:
+ * Copyright(c) 2005-2006 Cay S. Horstmann (http://horstmann.com)
+ *
+ * This code is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation.
+ *
+ * This code is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * @author Cay Horstmann
+ * @author Chris Nevison
+ * @author Barbara Cloud Wells
+ * @author Ashwini Iyer
+ * @version 10/20/13
+ */
+import info.gridworld.actor.Actor;
+import info.gridworld.grid.Location;
+import info.gridworld.actor.Flower;
+import info.gridworld.actor.Rock;
+import info.gridworld.grid.Grid;
+import java.awt.Color;
+import info.gridworld.actor.Bug;
+
+public class Lovebug extends Bug
+{
+    public int prob;
+
+    /**
+     * Constructor for objects of class Lovebug
+     * @param color is used to set the bug's color
+     * @param probBreed is the probability of breeding that is used to set the instance variable.
+     */
+    public Lovebug( Color color, int probBreed)
+    {
+        this.setColor(color);
+        prob = probBreed;
+    }
+    
+    /**
+     * Constructor for objects of class Lovebug
+     * calls this constructor.with. Color.RED  and probBreed 
+     * @param probBreed is the probability of breeding that is used to set the instance variable.
+     */
+    public Lovebug( int probBreed)
+    {
+        this.setColor(Color.RED);
+        prob = probBreed;
+    }
+    
+    /**
+     * Constructor for objects of class Lovebug
+     * calls this constructor with color and the final constant.
+     * @param color is used to set the bug's color
+     */
+    public Lovebug(Color color)
+    {
+        this.setColor(color);
+        prob = 72;
+    }
+    
+    /**
+     * Constructor for objects of class Lovebug
+     * calls this constructor with Color.RED and the final constant. 
+     */
+    public Lovebug( )
+    {
+        this.setColor(Color.RED);
+        prob = 72;
+    }
+
+    /**
+     * Uses a parameter to determine whether a Lovebug can clone into a location 
+     * that is either empty or has a flower
+     * @param loc determine whether that location is safe to clone 
+     * 
+     * @return true if it can clone, otherwise false
+     */
+    public boolean canClone(Location loc)
+    {
+        Grid gr = this.getGrid();
+        if(!gr.isValid(loc)){
+            return false;
+        }
+        Actor a = (Actor) gr.get(loc);
+        if(a == null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * generates a random number between 0 and 100 
+     * if the random number is less than the probability of breeding it creates 
+     * a new Lovebug at the Location parameter with the same characteristics as 
+     * the current Lovebug (color, direction, probability of breeding) 
+     * @param loc location where we are cloning
+     */
+    public void clone(Location loc){
+        double rand = Math.random()*100 + 1.00;
+        if(rand < prob){
+            Lovebug l = new Lovebug(this.getColor(), prob);
+            l.putSelfInGrid(this.getGrid(), loc);
+            l.setDirection(this.getDirection());
+        }
+    }
+    
+    /**
+     * calls the superclass's act, gets the bug's location and direction
+     * gets the location that is behind and to the right
+     * gets the location that is behind and to the left
+     * if it can clone, it clones. 
+     */
+    
+    public void act(){
+        super.act();
+        Location loc = this.getLocation();
+        int dir = this.getDirection();
+        Location backLeft = loc.getAdjacentLocation(dir + Location.LEFT + Location.HALF_LEFT);
+        Location backRight = loc.getAdjacentLocation(dir + Location.RIGHT + Location.HALF_RIGHT);
+        if( canClone(backLeft) ){
+            clone(backLeft);
+        } else if( canClone(backRight) ){
+            clone(backRight);
+        }
+    }
+}
