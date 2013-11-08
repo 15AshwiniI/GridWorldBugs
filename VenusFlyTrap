@@ -1,0 +1,93 @@
+/* 
+ * AP(r) Computer Science GridWorld Case Study:
+ * Copyright(c) 2005-2006 Cay S. Horstmann (http://horstmann.com)
+ *
+ * This code is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation.
+ *
+ * This code is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * @author Cay Horstmann
+ * @author Chris Nevison
+ * @author Barbara Cloud Wells
+ * @author Ashwini Iyer
+ * @version 10/20/13
+ */
+
+import info.gridworld.actor.Actor;
+import info.gridworld.grid.Location;
+import info.gridworld.actor.Flower;
+import info.gridworld.actor.Rock;
+import info.gridworld.grid.Grid;
+import java.awt.Color;
+import info.gridworld.actor.Bug;
+
+public class VenusFlyTrap extends Flower
+{
+    public boolean hasEaten;
+
+    /**
+     * Constructs a VenusFlyTrap that eats bugs in front and behind it
+     */
+    public VenusFlyTrap()
+    {
+        this.setColor(Color.GREEN);
+    }
+
+    /**
+     * Gets the flower's grid
+     * if the grid is not null and the location parameter is valid gets the actor at that position
+     * @param loc the location to eat a bug if it is there
+     */
+    public void eatBug(Location loc)
+    {
+        Grid grid = this.getGrid();
+        if(!grid.isValid(loc)){
+            hasEaten = false;
+            return;
+        }
+        Actor a = (Actor)(grid.get(loc));
+        if (a instanceof Bug) {
+            a.removeSelfFromGrid();
+            hasEaten = true;
+            this.setColor(Color.GREEN) ;
+        }
+
+    }
+
+    /**
+     * Oversees the process of eating bugs
+     * gets the flower's current location and direction
+     * gets the location behind and in front of the flower
+     */
+    public void eat()
+    {
+        Location loc = this.getLocation();
+        int dir = this.getDirection();
+        Location inFront = loc.getAdjacentLocation(dir);
+        Location inBack = loc.getAdjacentLocation(dir + Location.HALF_CIRCLE);
+        eatBug(inFront);
+        eatBug(inBack);
+    }
+
+    /**
+     * sets instance variable to false
+     * calls eat method
+     * and it calls superclass' act if VenusFlyTrap has not eaten
+     */
+    public void act()
+    {
+        hasEaten = false;
+        eat();
+        if (!hasEaten)
+        {
+            super.act();
+        }
+        
+    }
+
+}
