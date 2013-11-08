@@ -1,0 +1,119 @@
+/* 
+ * AP(r) Computer Science GridWorld Case Study:
+ * Copyright(c) 2005-2006 Cay S. Horstmann (http://horstmann.com)
+ *
+ * This code is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation.
+ *
+ * This code is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * @author Cay Horstmann
+ * @author Chris Nevison
+ * @author Barbara Cloud Wells
+ * @author Ashwini Iyer
+ * @version 10/20/13
+ */
+
+import info.gridworld.actor.Rock;
+import java.awt.Color;
+
+public class Sandstone extends Rock
+{
+    static final int DEFAULT_LIGHTENING_FACTOR = 10;
+    final int COLOR_MAX = 255;
+    private int decomposingFactor = 0;
+    
+    /**
+     * Constructor for objects of class Sandstone
+     * @param color is used to set the rock's color
+     * @param decompose is a decomposition factor that is used to set the instance variable
+     */
+
+    public Sandstone(Color color, int decompose)
+    {
+        super(color);
+        decomposingFactor = decompose;
+    }
+    
+    /**
+     * Constructor for objects of class Sandstone, 
+     * calls this constructor with Color.BLACK and decompose
+     * @param decompose is a decomposition factor that is used to set the instance variable
+     */
+
+    public Sandstone (int decompose)
+    {
+        this(Color.BLACK, decompose);
+    }
+
+    /**
+     * Constructor for objects of class Sandstone
+     * @param color is used to set the rock's color
+     */
+    public Sandstone(Color color)
+    {
+        this(color, DEFAULT_LIGHTENING_FACTOR);
+    }
+
+    /**
+     * Constructor for objects of class Sandstone
+     * Calls this constructor with Color.BLACK and the final constant. 
+     */
+    public Sandstone() 
+    {
+        this(Color.BLACK, DEFAULT_LIGHTENING_FACTOR);
+    }
+
+    /**
+     * gets the rock's color, extracts the red value of Color object then adds it to the 
+     * decomposition factor
+     * does the same thing with green and blue values
+     */
+    public void lighten()
+    {
+        Color color = this.getColor();
+        int red = color.getRed();
+        int newRed = red + decomposingFactor;
+        if ( newRed >= COLOR_MAX)
+        {
+            newRed = COLOR_MAX;
+        }
+        int green = color.getGreen();
+        int newGreen = green + decomposingFactor;
+        if ( newGreen >= COLOR_MAX)
+        {
+            newGreen = COLOR_MAX;
+        }
+        int blue = color.getBlue();
+        int newBlue = blue + decomposingFactor;
+        if ( newBlue >= COLOR_MAX)
+        {
+            newBlue = COLOR_MAX;
+        }
+        Color newColor = new Color (newRed, newGreen, newBlue);
+        this.setColor(newColor);
+
+    }
+
+    /**
+     * lightens the rock
+     * If all the red, green, and blue values are equal to COLOR_MAX, 
+     * have the rock remove itself from the grid.
+     */
+
+    public void act()
+    {
+        lighten();
+        Color myColor = getColor();
+        if ((myColor.getRed() > COLOR_MAX) || 
+            (myColor.getGreen() > COLOR_MAX) || 
+            (myColor.getBlue() > COLOR_MAX))
+        {
+            removeSelfFromGrid();
+        }
+    }
+}
