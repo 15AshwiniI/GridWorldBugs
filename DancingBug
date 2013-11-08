@@ -1,0 +1,83 @@
+/* 
+ * AP(r) Computer Science GridWorld Case Study:
+ * Copyright(c) 2005-2006 Cay S. Horstmann (http://horstmann.com)
+ *
+ * This code is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation.
+ *
+ * This code is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * @author Cay Horstmann
+ * @author Chris Nevison
+ * @author Barbara Cloud Wells
+ * @author Ashwini Iyer
+ * @version 9/23/13
+ */
+import info.gridworld.grid.Location;
+import info.gridworld.actor.Bug;
+
+/**
+ * A <code>DancingBug</code> makes the bug dance. <br />
+ * The implementation of this class is testable on the AP CS A and AB exams.
+ */
+public class DancingBug extends Bug
+{
+    private int steps;
+    private int sideLength;
+    private int danceRoutineIndex;
+    private int [] danceRoutine;
+
+    /**
+     * Constructs bug to dance a routine determined by inputs into an array
+     * @param length the side length
+     * @param routine is the array for the steps in the dance routine
+     */
+    public DancingBug(int length, int [] routine)
+    {
+        danceRoutine = routine;
+        sideLength = length;
+        steps = 0;
+        danceRoutineIndex=0;
+    }
+
+    /**
+     * Moves to the next step in the routine
+     */
+    public void act()
+    {
+        if (steps < sideLength && canMove())
+        {
+           move();
+           steps++;
+        }
+        else
+        {
+            turn();
+            steps =0;
+        }
+    }
+    
+    /**
+     * Tells the bug what the next step in the dance routine is
+     */
+    
+    public void turn ()
+    {
+        for (int i = 0; i < danceRoutine[danceRoutineIndex]; i++)
+        {
+            super.turn();
+        }
+        danceRoutineIndex++;
+        if( danceRoutineIndex == danceRoutine.length)
+        {
+            danceRoutineIndex=0;
+        }
+       
+    }
+}
+
+
